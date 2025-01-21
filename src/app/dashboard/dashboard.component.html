@@ -1,0 +1,125 @@
+<div class="flex flex-col p-6 gap-3">
+    <div class="flex w-full justify-between m-3">
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+            <div class="flex flex-col gap-2">
+                <h4 class="text-animation text-6xl font-medium text-black">{{(books$ | async)?.length}}</h4>
+                <span class="text-sm font-medium">Total Books</span>
+            </div>
+        </div>
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+            <div class="flex flex-col gap-2">
+                <h4 class="text-animation text-6xl font-medium text-black">
+                    {{(memberships$ | async)?.length}}
+                </h4>
+                <span class="text-sm font-medium">Total Membership</span>
+            </div>
+        </div>
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+            <div class="flex flex-col gap-2">
+                <h4 class="text-animation text-6xl font-medium text-black dark:text-white">
+                    {{(staffMembers$ | async)?.length}}
+                </h4>
+                <span class="text-sm font-medium">Total Staff Members</span>
+            </div>
+        </div>
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+            <div class="flex flex-col gap-2">
+                <h4 class="text-animation text-6xl font-medium text-black dark:text-white">
+                    {{(transactions$ | async)?.length || 0}}
+                </h4>
+                <span class="text-sm font-medium">Total Transactions</span>
+            </div>
+        </div>
+    </div>
+    <div class="flex w-full justify-between m-3 gap-3">
+        <div class="flex w-[33%] rounded border border-stroke bg-white shadow-lg flex-col">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Top Lends Books</h1>
+            <div class="px-6 py-4 max-h-[350px]">
+                @if(chartOptionsBooks) {
+                <div id="bookChart" style="z-index: 1;">
+                    <apx-chart [series]="chartOptionsBooks.series" [chart]="chartOptionsBooks.chart"
+                        [labels]="chartOptionsBooks.labels" [responsive]="chartOptionsBooks.responsive"></apx-chart>
+                </div>
+                }
+            </div>
+        </div>
+        <div class="flex w-[33%] rounded border border-stroke bg-white shadow-lg flex-col">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Top Members</h1>
+            <div class="px-6 py-4 max-h-[350px]">
+                @if(chartOptionsMembers) {
+                <div id="memberChart" style="z-index: 1;">
+                    <apx-chart [series]="chartOptionsMembers.series" [chart]="chartOptionsMembers.chart"
+                        [labels]="chartOptionsMembers.labels" [responsive]="chartOptionsMembers.responsive"></apx-chart>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="flex w-[33%] rounded border border-stroke bg-white shadow-lg flex-col">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Favorite Books</h1>
+            <div class="favoriteBookContent px-6 py-4 max-h-[350px] overflow-y-auto">
+                @for(book of (favoriteBooks$ | async); let i = $index; track book.id) {
+                <div class="flex flex-col py-3" [ngClass]="{'border-b-2' : i+1 != (favoriteBooks$ | async)?.length}">
+                    <h1 class="text-lg text-black-500 font-medium">{{book?.title}}</h1>
+                    <p class="text-sm text-gray-500 font-medium">{{book?.author}}</p>
+                    <p class="text-sm text-gray-500 font-medium">Available Copies: {{book?.availableCopies}} Nos</p>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="flex w-full justify-between m-3 gap-3">
+        <div class="rounded border border-stroke bg-white shadow-lg w-full">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Recent Members Activity</h1>
+            <div class="favoriteBookContent px-6 py-4 max-h-[350px] overflow-y-auto">
+                <table class="min-w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Member Name</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Book Details</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Book Return Date</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Fine Amount</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if((transactions$ | async)?.length) {
+                        @for(transaction of (transactions$ | async); let i = $index; track transaction.id) {
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">{{i+1}}</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <h1 class="text-lg font-medium">{{transaction.memberDetails?.name}} <span
+                                        class="badge inline-block text-white text-xs font-medium px-2 py-1 rounded-full"
+                                        [ngClass]="{
+                                            'bg-red-500': converDate(transaction.returnDate) < currentDate
+                                          }">{{
+                                        converDate(transaction.returnDate) < currentDate ? 'Overdue' : '' }}</span>
+                                </h1>
+                                <p class="text-sm">{{transaction.memberDetails?.email}}</p>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <h1 class="text-lg font-medium">{{transaction.bookDetails?.title}}</h1>
+                                <p class="text-sm">{{transaction.bookDetails?.author}}</p>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2">{{transaction.returnDate | date}}</td>
+
+                            <td class="border border-gray-300 px-4 py-2">{{transaction.fineAmount | currency:
+                                'INR':true}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{transaction.status}}</td>
+                        </tr>
+                        }
+                        } @if(!(transactions$ | async)?.length) {
+                        <tr>
+                            <td class="px-4 py-2" colspan="9">
+                                <p class="text-lg font-medium text-center">There is no data available</p>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>

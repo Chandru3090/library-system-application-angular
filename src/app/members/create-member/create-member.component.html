@@ -1,0 +1,83 @@
+<div class="p-5" (click)="navigate()">
+    << Back to Summary Member </div>
+        <div class="max-w-xl mx-auto">
+
+            <div class=" bg-white shadow-lg p-4 rounded-lg">
+                <h1 class="text-xl mb-2 text-black-500 font-medium">Add New Member</h1>
+                <form [formGroup]="membershipForm" (ngSubmit)="createMembership()" class="space-y-4">
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" formControlName="name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Enter membership Name" />
+                        <p *ngIf="membershipForm.get('name')?.invalid && membershipForm.get('name')?.touched"
+                            class="text-red-500 text-xs">Name
+                            is required.</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="text" id="email" formControlName="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Enter membership Email" />
+                        <p *ngIf="membershipForm.get('email')?.invalid && membershipForm.get('email')?.touched"
+                            class="text-red-500 text-xs">
+                            Email is required.</p>
+                    </div>
+
+                    <!-- phoneNumber -->
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input id="phoneNumber" formControlName="phoneNumber" type="text"
+                            placeholder="Enter membership Phone Number"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                        <p *ngIf="membershipForm.get('phoneNumber')?.invalid && membershipForm.get('phoneNumber')?.touched"
+                            class="text-red-500 text-xs">Phone Number
+                            is required.</p>
+                    </div>
+
+                    <!-- Membership Start Date -->
+                    <div>
+                        <label for="membershipStartDate" class="block text-sm font-medium text-gray-700">Membership
+                            Start Date</label>
+                        <input type="date" id="membershipStartDate" formControlName="membershipStartDate"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                    </div>
+
+                    <!-- Available Copies -->
+                    <div>
+                        <label for="availableCopies" class="block text-sm font-medium text-gray-700">Membership
+                            Type</label>
+                        <select id="membershipType" formControlName="membershipType"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option *ngFor="let type of membershipTypeKeys" [value]="type">{{ type }}</option>
+                        </select>
+
+                        <p *ngIf="membershipForm.get('membershipType')?.invalid && membershipForm.get('membershipType')?.touched"
+                            class="text-red-500 text-xs">
+                            Membership type is required.</p>
+                    </div>
+
+                    <!-- Max Books Allowedr -->
+                    <div>
+                        <label for="maxBooksAllowed" class="block text-sm font-medium text-gray-700">Max Books
+                            Allowed</label>
+                        <input type="number" id="maxBooksAllowed" formControlName="maxBooksAllowed" readonly
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit"
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                            [disabled]="membershipForm.invalid">
+                            {{membershipId ? 'Update' : 'Submit'}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>

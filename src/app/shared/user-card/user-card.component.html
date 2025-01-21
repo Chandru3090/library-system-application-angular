@@ -1,0 +1,29 @@
+<div class="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-blue-600 h-24"></div>
+    <div class="relative -mt-12 flex justify-center">
+        <img class="w-24 h-24 rounded-full border-4 border-white" src="https://via.placeholder.com/150"
+            alt="User Avatar" />
+    </div>
+    <div class="flex px-4 justify-between items-center">
+        @if(userCard?.membershipType) {
+        <div class="badge inline-block text-white text-xs font-medium px-2 py-1 rounded-full"
+            [ngClass]="userCard?.membershipType === 'Basic' ? 'bg-yellow-500' : userCard?.membershipType === 'Premium' ? 'bg-blue-500' :'bg-green-500'">
+            {{userCard?.membershipType}}</div>
+        }
+
+        @if(userCard?.role) {
+            <div class="badge inline-block text-white text-xs font-medium px-2 py-1 rounded-full bg-blue-500">
+            {{userCard?.role}}</div>
+        }
+
+        <ng-content select="[favoriteHeader]"></ng-content>
+    </div>
+    <div class="p-6 text-center">
+        <h3 class="text-lg font-medium">{{userCard?.name}}</h3>
+        <p class="text-gray-500 text-sm mb-1">{{userCard?.email}}</p>
+        <p class="text-gray-500 text-sm mb-1">{{userCard?.phoneNumber}}</p>
+        @if(userCard?.membershipStartDate) {
+        <p class="text-gray-400 text-sm mb-1 italic">Mmbership Started on {{userCard?.membershipStartDate}}</p>
+        }
+    </div>
+</div>

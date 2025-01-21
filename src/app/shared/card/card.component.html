@@ -1,0 +1,29 @@
+<div class="rounded overflow-hidden shadow-lg bg-white">
+    <div class="p-4">
+        <div class="flex justify-between items-center">
+            <div class="font-medium text-lg mb-2">
+                {{card?.title}}
+            </div>
+            <ng-content select="[favoriteHeader]"></ng-content>
+        </div>
+        <p class="text-gray-700 text-sm mb-2">
+            <span class="font-semibold">Author:</span> {{card?.author}}
+        </p>
+        <p class="text-gray-700 text-sm mb-2">
+            <span class="font-semibold">Genre:</span> {{card?.genre}}
+        </p>
+        <p class="text-gray-700 text-sm mb-2">
+            <span class="font-semibold">Publication Year:</span> {{card?.publicationYear}}
+        </p>
+        <p class="text-gray-700 text-sm mb-2">
+            <span class="font-semibold">ISBN:</span> {{card?.isbnNumber}}
+        </p>
+        <p class="text-gray-700 text-sm mb-2">
+            <span class="font-semibold">Available Copies:</span> {{card?.availableCopies}}
+        </p>
+        <p class="text-gray-700 text-sm mb-2 flex items-center">
+            <span class="font-semibold">Rating:</span>
+            <ng-content select="[favoriteFooter]"></ng-content>
+        </p>
+    </div>
+</div>

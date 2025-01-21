@@ -1,0 +1,180 @@
+{
+  "members": [
+    {
+      "name": "Saranya Muruganantham",
+      "email": "saranyamjk@gmail.com",
+      "phoneNumber": "9566593696",
+      "membershipStartDate": "2025-01-07",
+      "membershipType": "Elite",
+      "maxBooksAllowed": 10,
+      "id": "d16d"
+    },
+    {
+      "id": "dba0",
+      "name": "Chandran Lakshmanan",
+      "email": "l.chandran3090@gmail.com",
+      "phoneNumber": "9787032240",
+      "membershipStartDate": "2025-01-07",
+      "membershipType": "Basic",
+      "maxBooksAllowed": 2,
+      "isFavorite": false
+    },
+    {
+      "name": "Rithanya Chandran",
+      "email": "rithanya.cs3024@gmail.com",
+      "phoneNumber": "9787032240",
+      "membershipStartDate": "2025-01-07",
+      "membershipType": "Premium",
+      "maxBooksAllowed": 5,
+      "id": "85cc"
+    }
+  ],
+  "books": [
+    {
+      "id": "bd4d",
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "genre": "Fiction",
+      "publicationYear": 1925,
+      "availableCopies": 19,
+      "isbnNumber": "123456789",
+      "rating": 3,
+      "isFavorite": true
+    },
+    {
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "genre": "Sci-Fi",
+      "publicationYear": 1960,
+      "availableCopies": 29,
+      "isbnNumber": "123456789",
+      "rating": 5,
+      "id": "70a0",
+      "isFavorite": true
+    },
+    {
+      "title": "1984",
+      "author": "George Orwell",
+      "genre": "Non-Fiction",
+      "publicationYear": 1949,
+      "availableCopies": 8,
+      "isbnNumber": "123456789",
+      "rating": 1,
+      "id": "521b",
+      "isFavorite": false
+    },
+    {
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "genre": "Biography",
+      "publicationYear": 1951,
+      "availableCopies": 20,
+      "isbnNumber": "123456789",
+      "rating": 4,
+      "id": "a8fd",
+      "isFavorite": false
+    },
+    {
+      "id": "f22d",
+      "title": "The Kite Runner",
+      "author": "Khaled Hosseini",
+      "genre": "Fiction",
+      "publicationYear": 2003,
+      "availableCopies": 10,
+      "isbnNumber": "123456789",
+      "rating": 4,
+      "isFavorite": false
+    },
+    {
+      "id": "f08c",
+      "title": "The Book Thief",
+      "author": "Markus Zusak",
+      "genre": "Fiction",
+      "publicationYear": 2005,
+      "availableCopies": 29,
+      "isbnNumber": "123456789",
+      "rating": 3,
+      "isFavorite": false
+    }
+  ],
+  "staff-members": [
+    {
+      "name": "Balaji",
+      "email": "balaji@gmail.com",
+      "password": "Balaji@2024",
+      "phoneNumber": "9865912233",
+      "role": "Librarian",
+      "id": "566f"
+    },
+    {
+      "name": "Tanushree",
+      "email": "tanushree@gmail.com",
+      "password": "Tanushree@2024",
+      "phoneNumber": "9865913444",
+      "role": "Assistant",
+      "id": "300c"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "f4ad",
+      "member": "d16d",
+      "book": "bd4d",
+      "issueDate": "2025-01-12",
+      "returnDate": "2025-02-11",
+      "status": "Issued",
+      "fineAmount": 0,
+      "lastUpdated": "2025-01-12"
+    },
+    {
+      "member": "d16d",
+      "book": "f22d",
+      "issueDate": "2025-01-12",
+      "returnDate": "2025-02-11",
+      "status": "Issued",
+      "fineAmount": 0,
+      "id": "e752",
+      "lastUpdated": "2025-01-13"
+    },
+    {
+      "id": "9a2b",
+      "member": "85cc",
+      "book": "521b",
+      "issueDate": "2025-01-13",
+      "returnDate": "2025-02-12",
+      "status": "Issued",
+      "fineAmount": 0,
+      "lastUpdated": "2025-01-13"
+    },
+    {
+      "id": "0900",
+      "member": "85cc",
+      "book": "70a0",
+      "issueDate": "2025-01-13",
+      "returnDate": "2025-02-12",
+      "status": "Issued",
+      "fineAmount": 0,
+      "lastUpdated": "2025-01-13"
+    },
+    {
+      "id": "a306",
+      "member": "d16d",
+      "book": "521b",
+      "issueDate": "2025-01-13",
+      "returnDate": "2025-02-12",
+      "status": "Issued",
+      "fineAmount": 0,
+      "lastUpdated": "2025-01-13"
+    },
+    {
+      "member": "dba0",
+      "book": "521b",
+      "issueDate": "2025-01-20",
+      "returnDate": "2025-02-19",
+      "status": "Issued",
+      "fineAmount": 0,
+      "id": "50a3",
+      "lastUpdated": "2025-01-20"
+    }
+  ]
+}

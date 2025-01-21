@@ -1,0 +1,72 @@
+<div class="p-5" (click)="navigate()">
+    << Back to Transactions Summary</div>
+        <div class="max-w-xl mx-auto">
+
+            <div class=" bg-white shadow-lg p-4 rounded-lg">
+                <h1 class="text-xl mb-2 text-black-500 font-medium">Add New Transactions</h1>
+                <form [formGroup]="transactionsForm" (ngSubmit)="createTransactions()" class="space-y-4">
+                    <!-- Member -->
+                    <div>
+                        <label for="member" class="block text-sm font-medium text-gray-700">Member</label>
+                        <app-custom-dropdown [placeholder]="'Member'"  [options]="memberNames" formControlName="member"></app-custom-dropdown>
+                        <p *ngIf="transactionsForm.get('member')?.invalid && transactionsForm.get('member')?.touched"
+                            class="text-red-500 text-xs">Member
+                            is required.</p>
+                    </div>
+
+                    <!-- Book -->
+                    <div>
+                        <label for="book" class="block text-sm font-medium text-gray-700">Book</label>
+                        <app-custom-dropdown  [placeholder]="'Book'" [options]="bookNames" formControlName="book"></app-custom-dropdown>
+                        <p *ngIf="transactionsForm.get('book')?.invalid && transactionsForm.get('book')?.touched"
+                            class="text-red-500 text-xs">
+                            Book is required.</p>
+                    </div>
+
+                    <!-- Book Issue Date -->
+                    <div>
+                        <label for="issueDate" class="block text-sm font-medium text-gray-700">Issue Date</label>
+                        <input type="date" id="issueDate" formControlName="issueDate" (change)="dateChange('issueDate')"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                    </div>
+
+                    <!-- Book Return Date -->
+                    <div>
+                        <label for="returnDate" class="block text-sm font-medium text-gray-700">Return Date</label>
+                        <input type="date" id="returnDate" formControlName="returnDate" (change)="dateChange('returnDate')"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                    </div>
+
+                    <!-- Transactions Status -->
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Transactions Status</label>
+                        <select id="status" name="status" formControlName="status" (change)="statusChange()"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option *ngFor="let type of transactionsStatus" [value]="type">{{ type }}</option>
+                        </select>
+
+                        <p *ngIf="transactionsForm.get('status')?.invalid && transactionsForm.get('status')?.touched"
+                            class="text-red-500 text-xs">
+                            Status is required.</p>
+                    </div>
+
+                    <!-- Max Books Allowedr -->
+                    <div>
+                        <label for="fineAmount" class="block text-sm font-medium text-gray-700">Fine Amount</label>
+                        <input type="number" id="fineAmount" name="fineAmount" formControlName="fineAmount"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit"
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                            [disabled]="transactionsForm.invalid">
+                            {{transactionId ? 'Update' : 'Submit'}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>

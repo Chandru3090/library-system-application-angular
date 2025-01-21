@@ -1,0 +1,17 @@
+<header class="sticky top-0 flex justify-between bg-blue-500 text-white p-5">
+    <div class="logo">Library System Application</div>
+    <nav class="flex gap-3">
+        <ul class="flex gap-3">
+            @for(menu of menus; track menu.name) {
+            <li>
+                @if(menu?.link) {
+                <a href="javascript:void(0)" [routerLink]="[menu?.link]">{{menu?.name}}</a>
+                } 
+            </li>
+            }
+            <li>
+                <a href="javascript:void(0)" (click)="logout()">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>

@@ -1,0 +1,95 @@
+<div class="p-5" (click)="navigate()">
+    << Back to Summary Staff Members </div>
+        <div class="max-w-xl mx-auto">
+
+            <div class=" bg-white shadow-lg p-4 rounded-lg">
+                <h1 class="text-xl mb-2 text-black-500 font-medium">Add New Staff Members</h1>
+                <form [formGroup]="staffMembershipForm" (ngSubmit)="createStaffMembers()" class="space-y-4">
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" formControlName="name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Enter staff members Name" />
+                        @if(staffMembershipForm.get('name')?.invalid && staffMembershipForm.get('name')?.touched) {
+                        <p class="text-red-500 text-xs">Name
+                            is required.</p>
+                        }
+
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="text" id="email" formControlName="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Enter staff members Email" />
+                        @if(staffMembershipForm.get('email')?.invalid && staffMembershipForm.get('email')?.touched) {
+                        <p class="text-red-500 text-xs">
+                            Email is required.</p>
+                        }
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" formControlName="password"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Enter staff members Password" />
+                        @if(staffMembershipForm.get('password')?.invalid &&
+                        staffMembershipForm.get('password')?.touched) {
+                        <p class="text-red-500 text-xs">
+                            Password is required.</p>
+                        }
+                        @if(staffMembershipForm.get('password')?.invalid &&
+                        staffMembershipForm.get('password')?.touched &&
+                        staffMembershipForm.get('password')?.hasError('passwordStrength')) {
+                        <p class="text-red-500 text-xs">
+                            Password must include at least 8 characters, an uppercase letter, a lowercase letter, a
+                            number, and a special character</p>
+                        }
+                    </div>
+
+                    <!-- phoneNumber -->
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input id="phoneNumber" formControlName="phoneNumber" type="text"
+                            placeholder="Enter staff members Phone Number"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                        @if(staffMembershipForm.get('phoneNumber')?.invalid &&
+                        staffMembershipForm.get('phoneNumber')?.touched) {
+                        <p class="text-red-500 text-xs">Phone Number
+                            is required.</p>
+                        }
+                    </div>
+
+                    <!-- Staff Members Role -->
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700">Membership
+                            Type</label>
+                        <select id="role" formControlName="role"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+
+                            @for(role of staffMembersRoles; track role;) {
+                            <option [value]="role">{{ role }}</option>
+                            }
+                        </select>
+                        @if(staffMembershipForm.get('role')?.invalid &&
+                        staffMembershipForm.get('role')?.touched) {
+                        <p class="text-red-500 text-xs">
+                            Membership type is required.</p>
+                        }
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit"
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                            [disabled]="staffMembershipForm.invalid">
+                            {{staffMembersId ? 'Update' : 'Submit'}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
