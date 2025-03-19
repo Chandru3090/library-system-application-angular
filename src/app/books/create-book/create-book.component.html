@@ -53,13 +53,13 @@
                 currentYear }}.</p>
           </div>
 
-          <!-- Available Copies -->
+          <!-- Total Copies -->
           <div>
-            <label for="availableCopies" class="block text-sm font-medium text-gray-700">Available Copies</label>
-            <input type="number" id="availableCopies" formControlName="availableCopies"
+            <label for="totalCopies" class="block text-sm font-medium text-gray-700">Total Copies</label>
+            <input type="number" id="totalCopies" formControlName="totalCopies"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               min="0" />
-            <p *ngIf="bookForm.get('availableCopies')?.errors?.['min']" class="text-red-500 text-xs">Available copies
+            <p *ngIf="bookForm.get('totalCopies')?.errors?.['min']" class="text-red-500 text-xs">Total copies
               must
               be >= 0.</p>
           </div>

@@ -5,6 +5,7 @@ export interface Book {
     genre: Genre,
     publicationYear: string,
     availableCopies: number,
+    totalCopies?: number,
     isbnNumber: string,
     rating: number,
     isFavorite?: boolean
@@ -64,4 +65,18 @@ export enum MemberShipType {
     Basic = 2,
     Premium = 5,
     Elite = 10
+}
+
+export interface Toast {
+    id: string,
+    title: string,
+    message: string,
+    type: ToastType,
+    duration?: number,
+}
+export enum ToastType {
+    Success,
+    Error,
+    Info,
+    Warning
 }

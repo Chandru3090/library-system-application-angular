@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MemberShipType } from '../../utils/models';
+import { Membership, MemberShipType, ToastType } from '../../utils/models';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { LibraryService } from '../../services/library.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-create-member',
@@ -18,17 +19,18 @@ export class CreateMemberComponent implements OnInit, OnDestroy {
   membershipTypes = MemberShipType;
   unsubscribe$: Subject<any> = new Subject<any>();
   membershipId!: string | null;
-  constructor(private fb: FormBuilder,
-    private service: LibraryService,
-    private route: ActivatedRoute) {
-    this.createMembershipForm();
-  }
+  
+  private fb: FormBuilder = inject(FormBuilder);
+  private service: LibraryService = inject(LibraryService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private toastService: NotificationService = inject(NotificationService);
 
   get membershipTypeKeys(): string[] {
     return Object.keys(MemberShipType).filter((key) => isNaN(Number(key)));
   }
 
   ngOnInit(): void {
+    this.createMembershipForm();
     this.membershipId = this.route.snapshot.paramMap.get('id');
     if (this.membershipId) {
       this.getMemberShipDetailsById(this.membershipId);
@@ -58,17 +60,21 @@ export class CreateMemberComponent implements OnInit, OnDestroy {
     if (this.membershipForm?.valid && !this.membershipId) {
       const payload = this.membershipForm.value;
       payload.lendsBookCount = 0;
-      this.service.createMembership(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+      this.service.createMembership(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Membership) => {
+        this.toastService.show('Success', `${data.name} user created successfully`, ToastType.Success);
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Error', 'Membership user create API Failure', ToastType.Error);
       });
     } else {
       const payload = { ...this.membershipForm.value, id: this.membershipId }
-      this.service.updateMembership(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+      this.service.updateMembership(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Membership) => {
+        this.toastService.show('Success', `${data.name} user updated successfully`, ToastType.Success);
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Success', 'Membership user update API Failure', ToastType.Error);
       });
     }
   }
@@ -77,7 +83,8 @@ export class CreateMemberComponent implements OnInit, OnDestroy {
     this.service.getMemberShipById(membershipId).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
       this.membershipForm.patchValue({ ...data });
     }, error => {
-      console.error(error)
+      console.error(error);
+      this.toastService.show('Error', 'Get Membership API Failure', ToastType.Error);
     });
   }
 

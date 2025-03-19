@@ -1,25 +1,42 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './services/auth.guard';
+import { AuthGuard } from './services/guards/auth.guard';
+import { RoleGuard } from './services/guards/role.guard';
 
 export const routes: Routes = [
     {
         path: 'books',
-        loadChildren: () => import('./books/books.module').then(m => m.BooksModule),
+        children: [
+            { path: '', loadComponent: () => import('./books/summary-books/summary-books.component').then(c => c.SummaryBooksComponent) },
+            { path: 'create', loadComponent: () => import('./books/create-book/create-book.component').then(c => c.CreateBookComponent), canActivate: [RoleGuard] },
+            { path: 'edit/:id', loadComponent: () => import('./books/create-book/create-book.component').then(c => c.CreateBookComponent), canActivate: [RoleGuard] }
+        ],
         canActivate: [AuthGuard]
     },
     {
         path: 'members',
-        loadChildren: () => import('./members/members.module').then(m => m.MembersModule),
+        children: [
+            { path: '', loadComponent: () => import('./members/member-list/member-list.component').then(c => c.MemberListComponent) },
+            { path: 'create', loadComponent: () => import('./members/create-member/create-member.component').then(c => c.CreateMemberComponent), canActivate: [RoleGuard] },
+            { path: 'edit/:id', loadComponent: () => import('./members/create-member/create-member.component').then(c => c.CreateMemberComponent), canActivate: [RoleGuard] }
+        ],
         canActivate: [AuthGuard]
     },
     {
         path: 'transactions',
-        loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsModule),
+        children: [
+            { path: '', loadComponent: () => import('./transactions/transaction-list/transaction-list.component').then(c => c.TransactionListComponent) },
+            { path: 'create', loadComponent: () => import('./transactions/create-transaction/create-transaction.component').then(c => c.CreateTransactionComponent), canActivate: [RoleGuard] },
+            { path: 'edit/:id', loadComponent: () => import('./transactions/create-transaction/create-transaction.component').then(c => c.CreateTransactionComponent), canActivate: [RoleGuard] }
+        ],
         canActivate: [AuthGuard]
     },
     {
         path: 'staff-members',
-        loadChildren: () => import('./staff-members/staff-members.module').then(m => m.StaffMembersModule),
+        children: [
+            { path: '', loadComponent: () => import('./staff-members/staff-member-list/staff-member-list.component').then(c => c.StaffMemberListComponent) },
+            { path: 'create', loadComponent: () => import('./staff-members/create-staff-member/create-staff-member.component').then(c => c.CreateStaffMemberComponent), canActivate: [RoleGuard] },
+            { path: 'edit/:id', loadComponent: () => import('./staff-members/create-staff-member/create-staff-member.component').then(c => c.CreateStaffMemberComponent), canActivate: [RoleGuard] }
+        ],
         canActivate: [AuthGuard]
     },
     {

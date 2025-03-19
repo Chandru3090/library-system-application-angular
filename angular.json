@@ -34,7 +34,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/tailwind.css"
+              "src/tailwind.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/apexcharts/dist/apexcharts.min.js"

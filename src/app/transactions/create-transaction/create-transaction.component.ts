@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { LibraryService } from '../../services/library.service';
-import { Book, Membership, Transaction } from '../../utils/models';
+import { Book, Membership, ToastType, Transaction } from '../../utils/models';
 import { CustomDropdownComponent } from '../../shared/custom-dropdown/custom-dropdown.component';
 import { TRANSACTIONS_STATUS } from '../../utils/constant';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-create-transaction',
@@ -26,14 +27,15 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
   books: Book[] = [];
   memberNames: string[] = [];
   members: Membership[] = [];
-  constructor(private fb: FormBuilder,
-    private router: Router,
-    private service: LibraryService,
-    private route: ActivatedRoute) {
-    this.createTransactionsForm()
-  }
+
+  private fb: FormBuilder = inject(FormBuilder);
+  private router: Router = inject(Router);
+  private service: LibraryService = inject(LibraryService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private toastService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
+    this.createTransactionsForm()
     this.transactionId = this.route.snapshot.paramMap.get('id');
     this.getBooks();
     this.getMemberships();
@@ -46,7 +48,7 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
     const dropdownData: string[] = [];
     this.service.getBooks().pipe(takeUntil(this.unsubscribe$), map((datas: any[]) => {
       return datas.map(x => {
-        dropdownData.push(`${x.id}_${x.title}`);
+        dropdownData.push(`${x.id}_${x.title}_${x.availableCopies}`);
         return x;
       })
     })).subscribe((data: Book[]) => {
@@ -70,7 +72,7 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
 
   getTransactionById(transactionId: string) {
     this.service.getTransactionById(transactionId).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
-      data.member = this.members.filter((x: any) => (x.split('_')[0] === data.member))[0];
+      data.member = this.memberNames.filter((x: any) => (x.split('_')[0] === data.member))[0];
       data.book = this.bookNames.filter((x: any) => (x.split('_')[0] === data.book))[0];
       this.transactionsForm.patchValue({ ...data });
     }, error => {
@@ -109,7 +111,7 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
         this.updateBook(payload.book);
       })
     } else {
-      const payload = { ...this.transactionsForm.value, id: this.transactionId }
+      const payload = { ...this.transactionsForm.value, id: this.transactionId };
       payload.member = payload.member.split('_')[0];
       payload.book = payload.book.split('_')[0];
       payload.lastUpdated = new Date().toISOString().substring(0, 10);
@@ -121,9 +123,23 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
         payload.fineAmount = 1000;
       }
       this.service.updateTransaction(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+        let bookPayload: any;
+        if (payload.status == 'Returned') {
+          bookPayload = this.books.filter((book: Book) => book.id === payload.book)[0];
+          bookPayload.availableCopies = bookPayload.availableCopies + 1;
+        } else if (payload.status == 'Book Lost') {
+          bookPayload = this.books.filter((book: Book) => book.id === payload.book)[0];
+          bookPayload.availableCopies = bookPayload.availableCopies - 1;
+        }
+        if (bookPayload) {
+          this.service.updateBook(bookPayload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+            this.toastService.show('Success', 'Transaction updated successfully', ToastType.Success);
+          });
+        }
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Error', 'Transaction API Failure', ToastType.Error);
       });
     }
   }
@@ -167,6 +183,7 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
     const book = this.books.filter((x: Book) => x.id === bookId)[0];
     book.availableCopies = book.availableCopies - 1;
     this.service.updateBook(book).subscribe(data => {
+      this.toastService.show('Success', 'Transaction created successfully', ToastType.Success);
       this.navigate();
     })
   }

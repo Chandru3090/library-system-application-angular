@@ -1,0 +1,23 @@
+<div class="fixed bottom-10 left-5 z-99">
+    @for(toast of toasts; track toast.id) {
+    <div class="toast p-4 my-2 rounded-sm shadow-md w-[300px]" [ngClass]="{
+            'bg-green-500': toast.type == TOAST_TYPES.Success,
+            'bg-blue-500': toast.type == TOAST_TYPES.Info,  
+            'bg-red-500': toast.type == TOAST_TYPES.Error,
+            'bg-yellow-500': toast.type == TOAST_TYPES.Warning
+          }">
+        <div class="flex justify-between w-full flex-col">
+            <div class="flex justify-between w-full mb-4">
+                <h4 class="text-white font-medium">{{toast.title}}</h4>
+                <button class="cursor-pointer" (click)="removeToast(toast.id)">
+                    <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <p class="text-white">{{toast.message}}</p>
+        </div>
+    </div>
+    }
+</div>

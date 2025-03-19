@@ -3,13 +3,27 @@ import { LibraryService } from '../services/library.service';
 import { CommonModule } from '@angular/common';
 import { map, Observable } from 'rxjs';
 import { Book, Membership, StaffMember, Transaction } from '../utils/models';
-import { ApexChart, ApexNonAxisChartSeries, ApexResponsive, ChartComponent, NgApexchartsModule } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexLegend, ApexNonAxisChartSeries, ApexResponsive, ApexStroke, ApexTitleSubtitle, ApexXAxis, ApexYAxis, ChartComponent, NgApexchartsModule } from "ng-apexcharts";
 
-export type ChartOptions = {
+export type ChartOptionsForPieChart = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
+};
+
+export type ChartOptionsForAreaChart = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+  xaxis?: ApexXAxis;
+  stroke?: ApexStroke;
+  dataLabels?: ApexDataLabels;
+  yaxis?: ApexYAxis;
+  title?: ApexTitleSubtitle;
+  legend?: ApexLegend;
+  subtitle?: ApexTitleSubtitle;
 };
 
 @Component({
@@ -26,15 +40,19 @@ export class DashboardComponent implements OnInit {
   memberships$!: Observable<Membership[]>;
   staffMembers$!: Observable<StaffMember[]>;
   transactions$!: Observable<Transaction[]>;
+  overDuetransactions: Transaction[] = [];
   currentDate = new Date().toISOString().substring(0, 10);
   books: Book[] = [];
   groupedByBook: any;
   members: Membership[] = [];
   @ViewChild("bookChart") chartBook: ChartComponent | undefined;
   @ViewChild("memberChart") chartMember: ChartComponent | undefined;
-  public chartOptionsBooks: Partial<ChartOptions> | undefined;
-  public chartOptionsMembers: Partial<ChartOptions> | undefined;
+  @ViewChild("overdueAmountChart") chartOverdueAmount: ChartComponent | undefined;
+  public chartOptionsOverdueAmount: Partial<ChartOptionsForAreaChart> | undefined;
+  public chartOptionsBooks: Partial<ChartOptionsForPieChart> | undefined;
+  public chartOptionsMembers: Partial<ChartOptionsForPieChart> | undefined;
   groupedByMembers: any;
+  totalOverdueAmount: number = 0;
   constructor(private service: LibraryService) { }
 
   ngOnInit(): void {
@@ -51,8 +69,8 @@ export class DashboardComponent implements OnInit {
     this.favoriteBooks$ = this.service.getBooks().pipe(map((books: Book[]) => books.filter((book: Book) => book.isFavorite)));
     this.memberships$ = this.service.getMembership().pipe(map((datas: Membership[]) => { this.members = datas; return datas; }));
     this.staffMembers$ = this.service.getStaffMember();
-    this.transactions$ = this.service.getTransactions().pipe(map((transaction: Transaction[]) => {
-      this.groupedByBook = transaction.reduce((acc: any, item) => {
+    this.transactions$ = this.service.getTransactions().pipe(map((transactions: Transaction[]) => {
+      this.groupedByBook = transactions.reduce((acc: any, item) => {
         if (!acc[item.book]) {
           acc[item.book] = [];
         }
@@ -60,18 +78,23 @@ export class DashboardComponent implements OnInit {
         return acc;
       }, {});
 
-      this.groupedByMembers = transaction.reduce((acc: any, item) => {
+      this.groupedByMembers = transactions.reduce((acc: any, item) => {
         if (!acc[item.member]) {
           acc[item.member] = [];
         }
         acc[item.member].push(item);
         return acc;
       }, {});
-      return transaction;
+      this.overDuetransactions = transactions.filter((transaction: Transaction) => this.converDate(transaction.returnDate) < this.currentDate);
+      this.totalOverdueAmount = this.overDuetransactions
+        .map(transaction => Number(transaction.fineAmount))
+        .reduce((acc, fine) => acc + fine, 0);
+      return transactions;
     }));
     setTimeout(() => {
       this.createPieChartForTopBooksLend();
       this.createPieChartForTopMember();
+      this.createAreaChartForOverdueAmount();
     }, 2000)
 
   }
@@ -136,5 +159,61 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
+  }
+
+  getBadgeClassByMembershipType(transaction: any) {
+    const membersType = transaction.memberDetails?.membershipType;
+    return (membersType == 'Basic') ? 'bg-red-500' : (membersType === 'Premium') ? 'bg-blue-500' : 'bg-green-500';
+  }
+
+  createAreaChartForOverdueAmount() {
+    this.chartOptionsOverdueAmount = {
+      series: [
+        {
+          name: "Overdue Amount Report",
+          data: this.getOvedueAmountData()
+        }
+      ],
+      chart: {
+        type: "area",
+        height: '300px',
+        zoom: {
+          enabled: false
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: "smooth"
+      },
+
+      title: {
+        text: "Overdue Amount Report",
+        align: "left"
+      },
+      subtitle: {
+        text: "Fine Amount",
+        align: "left"
+      },
+      labels: this.getOverdueAmountLabel(),
+      xaxis: {
+        type: "category"
+      },
+      yaxis: {
+        opposite: true
+      },
+      legend: {
+        horizontalAlign: "left"
+      }
+    };
+  }
+
+  getOvedueAmountData() {
+    return this.overDuetransactions.map((transaction: Transaction) => transaction.fineAmount);
+  }
+
+  getOverdueAmountLabel() {
+    return this.overDuetransactions.map((transaction: Transaction) => transaction.memberDetails?.name);
   }
 }

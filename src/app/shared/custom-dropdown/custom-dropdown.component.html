@@ -5,11 +5,11 @@
         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
 
     <!-- Dropdown -->
-    <div class="absolute z-10 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg"
-        *ngIf="dropdownVisible">
+    <div class="absolute z-10 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg" *ngIf="dropdownVisible">
         <ul class="list-none p-0 m-0">
             @for(option of filteredOptions; track option) {
-            <li (mousedown)="onSelect(option)" class="px-4 py-2 cursor-pointer hover:bg-blue-100">
+            <li (mousedown)="onSelect(option)"
+                class="px-4 py-2 cursor-pointer hover:bg-blue-100 " [ngClass]="{'text-gray-300 pointer-events-none': +option.split('_')[2] < 1 }">
                 {{ option.split('_')[1] }}
             </li>
             }

@@ -1,12 +1,12 @@
 <div class="flex flex-col p-6 gap-3">
     <div class="flex w-full justify-between m-3">
-        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[275px] min-h-[150px] flex items-center">
             <div class="flex flex-col gap-2">
                 <h4 class="text-animation text-6xl font-medium text-black">{{(books$ | async)?.length}}</h4>
                 <span class="text-sm font-medium">Total Books</span>
             </div>
         </div>
-        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[275px] min-h-[150px] flex items-center">
             <div class="flex flex-col gap-2">
                 <h4 class="text-animation text-6xl font-medium text-black">
                     {{(memberships$ | async)?.length}}
@@ -14,7 +14,7 @@
                 <span class="text-sm font-medium">Total Membership</span>
             </div>
         </div>
-        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[275px] min-h-[150px] flex items-center">
             <div class="flex flex-col gap-2">
                 <h4 class="text-animation text-6xl font-medium text-black dark:text-white">
                     {{(staffMembers$ | async)?.length}}
@@ -22,7 +22,7 @@
                 <span class="text-sm font-medium">Total Staff Members</span>
             </div>
         </div>
-        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[250px] min-h-[150px] flex items-center">
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[275px] min-h-[150px] flex items-center">
             <div class="flex flex-col gap-2">
                 <h4 class="text-animation text-6xl font-medium text-black dark:text-white">
                     {{(transactions$ | async)?.length || 0}}
@@ -30,11 +30,72 @@
                 <span class="text-sm font-medium">Total Transactions</span>
             </div>
         </div>
+        <div class="rounded border border-stroke bg-white p-6 shadow-lg min-w-[275px] min-h-[150px] flex items-center">
+            <div class="flex flex-col gap-2">
+                <h4 class="text-animation text-6xl font-medium text-black dark:text-white">
+                    {{totalOverdueAmount | currency:'INR':true|| 0}}
+                </h4>
+                <span class="text-sm font-medium">Total Ovedue Amount</span>
+            </div>
+        </div>
     </div>
     <div class="flex w-full justify-between m-3 gap-3">
-        <div class="flex w-[33%] rounded border border-stroke bg-white shadow-lg flex-col">
+        <div class="rounded border border-stroke bg-white shadow-lg w-[55%]">
+            <h1 class="w-[full] px-6 py-4 text-lg border-b font-medium">Overdue Amount Report</h1>
+            <div class="favoriteBookContent px-6 py-4 max-h-[350px] overflow-y-auto">
+                @if(chartOptionsOverdueAmount) {
+                <div id="overdueAmountChart">
+                    <apx-chart [series]="chartOptionsOverdueAmount.series" [chart]="chartOptionsOverdueAmount.chart"
+                        [xaxis]="chartOptionsOverdueAmount.xaxis" [stroke]="chartOptionsOverdueAmount.stroke"
+                        [dataLabels]="chartOptionsOverdueAmount.dataLabels" [yaxis]="chartOptionsOverdueAmount.yaxis"
+                        [labels]="chartOptionsOverdueAmount.labels" [legend]="chartOptionsOverdueAmount.legend"
+                        [title]="chartOptionsOverdueAmount.title"
+                        [subtitle]="chartOptionsOverdueAmount.subtitle"></apx-chart>
+                </div>
+                }
+            </div>
+        </div>
+        <div class="flex w-[45%] rounded border border-stroke bg-white shadow-lg flex-col">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Books with Remaining Quantity</h1>
+            <div class="favoriteBookContent px-6 py-4 max-h-[350px] overflow-y-auto">
+                <table class="min-w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Book Details</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Total Copies</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Available Copies</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if((books$ | async)?.length) {
+                        @for(book of (books$ | async); let i = $index; track book.id) {
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">{{i+1}}</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <h1 class="text-lg font-medium">{{book?.title}}</h1>
+                                <p class="text-sm">{{book?.author}}</p>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2">{{book?.totalCopies}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{book?.availableCopies}}</td>
+                        </tr>
+                        }
+                        } @if(!(books$ | async)?.length) {
+                        <tr>
+                            <td class="px-4 py-2" colspan="9">
+                                <p class="text-lg font-medium text-center">There is no data available</p>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="flex w-full justify-between m-3 gap-3">
+        <div class="flex w-[27.5%] rounded border border-stroke bg-white shadow-lg flex-col">
             <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Top Lends Books</h1>
-            <div class="px-6 py-4 max-h-[350px]">
+            <div class="py-2 max-h-[350px]">
                 @if(chartOptionsBooks) {
                 <div id="bookChart" style="z-index: 1;">
                     <apx-chart [series]="chartOptionsBooks.series" [chart]="chartOptionsBooks.chart"
@@ -43,9 +104,9 @@
                 }
             </div>
         </div>
-        <div class="flex w-[33%] rounded border border-stroke bg-white shadow-lg flex-col">
+        <div class="flex w-[27.5%] rounded border border-stroke bg-white shadow-lg flex-col">
             <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Top Members</h1>
-            <div class="px-6 py-4 max-h-[350px]">
+            <div class="py-2 max-h-[350px]">
                 @if(chartOptionsMembers) {
                 <div id="memberChart" style="z-index: 1;">
                     <apx-chart [series]="chartOptionsMembers.series" [chart]="chartOptionsMembers.chart"
@@ -54,19 +115,39 @@
                 }
             </div>
         </div>
-
-        <div class="flex w-[33%] rounded border border-stroke bg-white shadow-lg flex-col">
-            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Favorite Books</h1>
-            <div class="favoriteBookContent px-6 py-4 max-h-[350px] overflow-y-auto">
-                @for(book of (favoriteBooks$ | async); let i = $index; track book.id) {
-                <div class="flex flex-col py-3" [ngClass]="{'border-b-2' : i+1 != (favoriteBooks$ | async)?.length}">
-                    <h1 class="text-lg text-black-500 font-medium">{{book?.title}}</h1>
-                    <p class="text-sm text-gray-500 font-medium">{{book?.author}}</p>
-                    <p class="text-sm text-gray-500 font-medium">Available Copies: {{book?.availableCopies}} Nos</p>
+        <div class="flex w-[25%] rounded border border-stroke bg-white shadow-lg flex-col">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Overdue Books</h1>
+            <div class="favoriteBookContent px-6 max-h-[250px] overflow-y-auto">
+                @for(transaction of overDuetransactions; let i = $index; track transaction.id) {
+                <div class="flex justify-between items-center"
+                    [ngClass]="{'border-b-2' : i+1 != overDuetransactions.length}">
+                    <div class="flex flex-col py-3">
+                        <h1 class="text-lg text-black-500 font-medium">{{transaction?.memberDetails?.name}}</h1>
+                        <p class="text-sm text-gray-500 font-medium">{{transaction?.bookDetails?.title}}</p>
+                        <p class="text-xs text-gray-500">{{transaction?.bookDetails?.author}}</p>
+                    </div>
+                    <div class="flex">
+                        <h1 class="text-lg text-black-500 font-medium">{{transaction?.fineAmount | currency: 'INR':
+                            true}}</h1>
+                    </div>
                 </div>
                 }
             </div>
         </div>
+        <div class="flex w-[20%] rounded border border-stroke bg-white shadow-lg flex-col">
+            <h1 class="w-full px-6 py-4 text-lg border-b font-medium">Favorite Books</h1>
+            <div class="favoriteBookContent px-6 max-h-[250px] overflow-y-auto">
+                @for(book of (favoriteBooks$ | async); let i = $index; track book.id) {
+                <div class="flex flex-col py-3" [ngClass]="{'border-b-2' : i+1 != (favoriteBooks$ | async)?.length}">
+                    <h1 class="text-lg text-black-500 font-medium">{{book?.title}}</h1>
+                    <p class="text-sm text-gray-500 font-medium">{{book?.author}}</p>
+                    <p class="text-sm text-gray-500 font-medium">Copies: {{book?.totalCopies}} /
+                        {{book?.availableCopies}} Nos</p>
+                </div>
+                }
+            </div>
+        </div>
+
     </div>
     <div class="flex w-full justify-between m-3 gap-3">
         <div class="rounded border border-stroke bg-white shadow-lg w-full">
@@ -90,11 +171,16 @@
                             <td class="border border-gray-300 px-4 py-2">{{i+1}}</td>
                             <td class="border border-gray-300 px-4 py-2">
                                 <h1 class="text-lg font-medium">{{transaction.memberDetails?.name}} <span
-                                        class="badge inline-block text-white text-xs font-medium px-2 py-1 rounded-full"
+                                        class="badge inline-block text-white text-xs font-medium px-2 py-1 rounded-full mr-2"
                                         [ngClass]="{
                                             'bg-red-500': converDate(transaction.returnDate) < currentDate
                                           }">{{
                                         converDate(transaction.returnDate) < currentDate ? 'Overdue' : '' }}</span>
+                                            <span
+                                                class="badge inline-block text-white text-xs font-medium px-2 py-1 rounded-full"
+                                                [ngClass]="getBadgeClassByMembershipType(transaction)"
+                                                title="Membership Type">
+                                                {{transaction?.memberDetails?.membershipType}}</span>
                                 </h1>
                                 <p class="text-sm">{{transaction.memberDetails?.email}}</p>
                             </td>
@@ -121,5 +207,4 @@
             </div>
         </div>
     </div>
-    
 </div>

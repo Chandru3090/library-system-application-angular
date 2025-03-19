@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { Membership } from '../../utils/models';
+import { Membership, ToastType } from '../../utils/models';
 import { LibraryService } from '../../services/library.service';
 import { UserCardComponent } from '../../shared/user-card/user-card.component';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-member-list',
@@ -16,7 +17,10 @@ import { UserCardComponent } from '../../shared/user-card/user-card.component';
 export class MemberListComponent implements OnInit, OnDestroy {
   memberships$!: Observable<Membership[]>;
   unsubscribe$: Subject<any> = new Subject<any>();
-  constructor(private service: LibraryService) { }
+
+  private service: LibraryService = inject(LibraryService);
+  public authService: AuthService = inject(AuthService);
+  private toastService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
     this.getMemberships()
@@ -32,6 +36,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
 
   removeMember(membershipId: string) {
     this.service.removeMembership(membershipId).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Membership) => {
+      this.toastService.show('Success', `${data.name} removed successfully`, ToastType.Success);
       this.getMemberships();
     });
   }
@@ -39,7 +44,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
   toggleFavorite(membership: Membership) {
     membership.isFavorite = !membership.isFavorite;
     this.service.updateMembership(membership).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Membership) => {
-      console.log(data);
+      this.toastService.show('Success', `${data.name} has been ${membership.isFavorite ? 'marked' : 'unmarked'} as favorite`, ToastType.Success);
     });
   }
 

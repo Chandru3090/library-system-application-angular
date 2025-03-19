@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LibraryService } from '../../services/library.service';
 import { UserCardComponent } from '../../shared/user-card/user-card.component';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { StaffMember } from '../../utils/models';
+import { StaffMember, ToastType } from '../../utils/models';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-staff-member-list',
@@ -16,7 +18,9 @@ export class StaffMemberListComponent {
   staffMembers$!: Observable<StaffMember[]>;
   unsubscribe$: Subject<any> = new Subject<any>();
 
-  constructor(private service: LibraryService) { }
+  private service: LibraryService = inject(LibraryService);
+  public authService: AuthService = inject(AuthService);
+  private toastService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
     this.getStaffMembers()
@@ -32,7 +36,7 @@ export class StaffMemberListComponent {
 
   removeStaffMember(staffMemberId: string) {
     this.service.removeStaffMember(staffMemberId).pipe(takeUntil(this.unsubscribe$)).subscribe((data: StaffMember) => {
-      console.log(data);
+      this.toastService.show('Success', `${data.name} removed successfully`, ToastType.Success);
       this.getStaffMembers();
     });
   }
@@ -40,7 +44,7 @@ export class StaffMemberListComponent {
   toggleFavorite(staffMember: StaffMember) {
     staffMember.isFavorite = !staffMember.isFavorite;
     this.service.updateStaffMember(staffMember).pipe(takeUntil(this.unsubscribe$)).subscribe((data: StaffMember) => {
-      console.log(data);
+      this.toastService.show('Success', `${staffMember.name} has been ${staffMember.isFavorite ? 'marked' : 'unmarked'} as favorite`, ToastType.Success);
     });
   }
 

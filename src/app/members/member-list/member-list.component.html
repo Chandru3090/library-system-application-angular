@@ -1,31 +1,34 @@
 <div class="flex flex-col my-5 px-5 mx-auto">
     <div class="flex py-2 mb-5 justify-between items-center">
         <h1 class="text-xl text-black-500 font-medium">Membership Summary</h1>
-        <button
-            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-300"
+        <button [disabled]="authService.getUserRole() !=='Librarian'"
+            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
             (click)="navigate('/members/create')">Create Membership</button>
     </div>
     <div class="flex justify-center flex-wrap gap-4">
         <ng-container *ngFor="let membership of (memberships$ | async)">
             <app-user-card [userCard]="membership" *ngIf="membership">
                 <div class="favorite flex gap-2" favoriteHeader>
-                    <img class="pl-2"
-                        [src]="membership.isFavorite ?'assets/images/favourite-orange.svg' : 'assets/images/favourite-white.svg'"
-                        (click)="toggleFavorite(membership)" />
-                    <svg class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    <button [disabled]="authService.getUserRole() !=='Librarian'" (click)="toggleFavorite(membership)">
+                        <img class="pl-2"
+                            [src]="membership.isFavorite ?'assets/images/favourite-orange.svg' : 'assets/images/favourite-white.svg'" />
+                    </button>
+                    <button [disabled]="authService.getUserRole() !=='Librarian'"
                         (click)="navigate('/members/edit', membership.id)">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                    <svg class="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        (click)="removeMember(membership.id)">
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        <line x1="10" y1="11" x2="10" y2="17" />
-                        <line x1="14" y1="11" x2="14" y2="17" />
-                    </svg>
-
+                        <svg class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </button>
+                    <button [disabled]="authService.getUserRole() !=='Librarian'" (click)="removeMember(membership.id)">
+                        <svg class="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            <line x1="10" y1="11" x2="10" y2="17" />
+                            <line x1="14" y1="11" x2="14" y2="17" />
+                        </svg>
+                    </button>
                 </div>
             </app-user-card>
         </ng-container>

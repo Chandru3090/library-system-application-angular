@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LibraryService } from '../../services/library.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
+import { Book, ToastType } from '../../utils/models';
 
 @Component({
   selector: 'app-create-book',
@@ -18,14 +20,14 @@ export class CreateBookComponent implements OnInit, OnDestroy {
   currentYear = new Date().getFullYear();
   unsubscribe$: Subject<any> = new Subject<any>();
   bookId!: string | null;
-  constructor(private fb: FormBuilder,
-    private service: LibraryService,
-    private route: ActivatedRoute
-  ) {
-    this.createBookForm();
-  }
+
+  private fb: FormBuilder = inject(FormBuilder);
+  private service: LibraryService = inject(LibraryService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private toastService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
+    this.createBookForm();
     this.bookId = this.route.snapshot.paramMap.get('id');
     if (this.bookId) {
       this.getBookDetailsById(this.bookId);
@@ -42,7 +44,7 @@ export class CreateBookComponent implements OnInit, OnDestroy {
         '',
         [Validators.required, Validators.min(1900), Validators.max(this.currentYear)]
       ],
-      availableCopies: [0, [Validators.required, Validators.min(0)]],
+      totalCopies: [0, [Validators.required, Validators.min(0)]],
       isbnNumber: ['', Validators.required], // Add unique validation in your service or backend
       rating: [
         '',
@@ -53,18 +55,24 @@ export class CreateBookComponent implements OnInit, OnDestroy {
 
   createBook(): void {
     if (this.bookForm?.valid && !this.bookId) {
-      
-      this.service.createBook(this.bookForm.value).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+      const payload = this.bookForm.value;
+      payload.availableCopies = payload.totalCopies;
+      this.service.createBook(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Book) => {
+        this.toastService.show('Success', `${data.title} created successfully`, ToastType.Success);
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Error', 'Book create API Failure', ToastType.Error);
       });
     } else {
-      const payload = { ...this.bookForm.value, id: this.bookId }
-      this.service.updateBook(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+      const payload = { ...this.bookForm.value, id: this.bookId };
+      payload.availableCopies = payload.totalCopies;
+      this.service.updateBook(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Book) => {
+        this.toastService.show('Success', `${data.title} updated successfully`, ToastType.Success);
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Error', 'Book update API Failure', ToastType.Error);
       });
     }
   }
@@ -78,6 +86,7 @@ export class CreateBookComponent implements OnInit, OnDestroy {
       this.bookForm.patchValue({ ...data });
     }, error => {
       console.error(error)
+      this.toastService.show('Error', 'Get Book API Failure', ToastType.Error);
     });
   }
 

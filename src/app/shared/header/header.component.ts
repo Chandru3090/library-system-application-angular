@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HeaderComponent {
   @Input() menus: any = [];
-  constructor(private authService: AuthService) { }
+  authService: AuthService = inject(AuthService);
 
   logout() {
     this.authService.logout();

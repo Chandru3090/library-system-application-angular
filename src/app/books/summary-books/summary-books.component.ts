@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LibraryService } from '../../services/library.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { Book } from '../../utils/models';
+import { Book, ToastType } from '../../utils/models';
 import { CardComponent } from '../../shared/card/card.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-summary-books',
@@ -16,7 +17,10 @@ import { Router } from '@angular/router';
 export class SummaryBooksComponent implements OnInit, OnDestroy {
   books$!: Observable<Book[]>;
   unsubscribe$: Subject<any> = new Subject<any>();
-  constructor(private service: LibraryService) { }
+
+  private service: LibraryService = inject(LibraryService);
+  public authService: AuthService = inject(AuthService);
+  private toastService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
     this.getBooks();
@@ -25,12 +29,13 @@ export class SummaryBooksComponent implements OnInit, OnDestroy {
   toggleFavorite(book: Book) {
     book.isFavorite = !book.isFavorite;
     this.service.updateBook(book).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Book) => {
-      console.log(data);
+      this.toastService.show('Success', `${book.title} has been ${book.isFavorite ? 'marked' : 'unmarked'} as favorite`, ToastType.Success);
     });
   }
 
   removeBook(bookId: string) {
     this.service.removeBook(bookId).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Book) => {
+      this.toastService.show('Success', `${data.title} removed successfully`, ToastType.Success);
       this.getBooks();
     });
   }
@@ -41,6 +46,13 @@ export class SummaryBooksComponent implements OnInit, OnDestroy {
 
   getBooks() {
     this.books$ = this.service.getBooks();
+  }
+
+  rateBook(book: Book, rating: number) {
+    book.rating = rating;
+    this.service.updateBook(book).pipe(takeUntil(this.unsubscribe$)).subscribe((data: Book) => {
+      this.toastService.show('Success', `${book.title} rated successfully`, ToastType.Success);
+    });
   }
 
   ngOnDestroy(): void {

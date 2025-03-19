@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { LibraryService } from '../../services/library.service';
@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { STAFF_MEMBERS_ROLE } from '../../utils/constant';
 import { CommonModule } from '@angular/common';
 import { passwordValidator } from '../../utils/password.validator';
+import { NotificationService } from '../../services/notification.service';
+import { StaffMember, ToastType } from '../../utils/models';
 
 @Component({
   selector: 'app-create-staff-member',
@@ -20,13 +22,13 @@ export class CreateStaffMemberComponent {
   unsubscribe$: Subject<any> = new Subject<any>();
   staffMembersId!: string | null;
 
-  constructor(private fb: FormBuilder,
-    private service: LibraryService,
-    private route: ActivatedRoute) {
-    this.createStaffMembersForm();
-  }
+  private fb: FormBuilder = inject(FormBuilder);
+  private service: LibraryService = inject(LibraryService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private toastService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
+    this.createStaffMembersForm();
     this.staffMembersId = this.route.snapshot.paramMap.get('id');
     if (this.staffMembersId) {
       this.getStaffMembersDetailsById(this.staffMembersId);
@@ -49,16 +51,20 @@ export class CreateStaffMemberComponent {
   createStaffMembers() {
     if (this.staffMembershipForm?.valid && !this.staffMembersId) {
       this.service.createStaffMember(this.staffMembershipForm.value).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+        this.toastService.show('Success', `${data.name} created successfully`, ToastType.Success);
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Error', 'Staff member create API Failure', ToastType.Error);
       });
     } else {
       const payload = { ...this.staffMembershipForm.value, id: this.staffMembersId };
-      this.service.updateStaffMember(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+      this.service.updateStaffMember(payload).pipe(takeUntil(this.unsubscribe$)).subscribe((data: StaffMember) => {
+        this.toastService.show('Success', `${data.name} updated successfully`, ToastType.Success);
         this.navigate();
       }, error => {
         console.error(error);
+        this.toastService.show('Error', 'Staff member update API Failure', ToastType.Error);
       });
     }
   }
@@ -67,7 +73,8 @@ export class CreateStaffMemberComponent {
     this.service.getStaffMemberById(membershipId).pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
       this.staffMembershipForm.patchValue({ ...data });
     }, error => {
-      console.error(error)
+      console.error(error);
+      this.toastService.show('Error', 'Get Satff Membership API Failure', ToastType.Error);
     });
   }
 

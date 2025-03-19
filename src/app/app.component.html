@@ -2,3 +2,6 @@
 <app-header [menus]="menus"></app-header>
 }
 <router-outlet></router-outlet>
+@if(notificationService.toasts.length) {
+<app-toast-notification [toasts]="notificationService.toasts"></app-toast-notification>
+}

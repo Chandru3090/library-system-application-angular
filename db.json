@@ -7,7 +7,8 @@
       "membershipStartDate": "2025-01-07",
       "membershipType": "Elite",
       "maxBooksAllowed": 10,
-      "id": "d16d"
+      "id": "d16d",
+      "isFavorite": true
     },
     {
       "id": "dba0",
@@ -17,7 +18,7 @@
       "membershipStartDate": "2025-01-07",
       "membershipType": "Basic",
       "maxBooksAllowed": 2,
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "name": "Rithanya Chandran",
@@ -26,7 +27,8 @@
       "membershipStartDate": "2025-01-07",
       "membershipType": "Premium",
       "maxBooksAllowed": 5,
-      "id": "85cc"
+      "id": "85cc",
+      "isFavorite": false
     }
   ],
   "books": [
@@ -37,6 +39,7 @@
       "genre": "Fiction",
       "publicationYear": 1925,
       "availableCopies": 19,
+      "totalCopies": 20,
       "isbnNumber": "123456789",
       "rating": 3,
       "isFavorite": true
@@ -47,20 +50,22 @@
       "genre": "Sci-Fi",
       "publicationYear": 1960,
       "availableCopies": 29,
+      "totalCopies": 30,
       "isbnNumber": "123456789",
       "rating": 5,
       "id": "70a0",
-      "isFavorite": true
+      "isFavorite": false
     },
     {
       "title": "1984",
       "author": "George Orwell",
       "genre": "Non-Fiction",
       "publicationYear": 1949,
-      "availableCopies": 8,
+      "totalCopies": 0,
       "isbnNumber": "123456789",
-      "rating": 1,
+      "rating": 4,
       "id": "521b",
+      "availableCopies": 0,
       "isFavorite": false
     },
     {
@@ -69,10 +74,11 @@
       "genre": "Biography",
       "publicationYear": 1951,
       "availableCopies": 20,
+      "totalCopies": 20,
       "isbnNumber": "123456789",
       "rating": 4,
       "id": "a8fd",
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "id": "f22d",
@@ -80,51 +86,77 @@
       "author": "Khaled Hosseini",
       "genre": "Fiction",
       "publicationYear": 2003,
-      "availableCopies": 10,
+      "availableCopies": 9,
+      "totalCopies": 10,
       "isbnNumber": "123456789",
       "rating": 4,
       "isFavorite": false
     },
     {
-      "id": "f08c",
       "title": "The Book Thief",
       "author": "Markus Zusak",
       "genre": "Fiction",
       "publicationYear": 2005,
-      "availableCopies": 29,
+      "availableCopies": 0,
+      "totalCopies": 10,
       "isbnNumber": "123456789",
-      "rating": 3,
+      "rating": 4,
+      "id": "f08c",
       "isFavorite": false
     }
   ],
   "staff-members": [
     {
-      "name": "Balaji",
-      "email": "balaji@gmail.com",
-      "password": "Balaji@2024",
+      "name": "Admin",
+      "email": "admin@gmail.com",
+      "password": "Admin@2024",
       "phoneNumber": "9865912233",
       "role": "Librarian",
-      "id": "566f"
+      "id": "566f",
+      "isFavorite": true
     },
     {
       "name": "Tanushree",
       "email": "tanushree@gmail.com",
-      "password": "Tanushree@2024",
+      "password": "Assistant@2024",
       "phoneNumber": "9865913444",
       "role": "Assistant",
-      "id": "300c"
+      "id": "300c",
+      "isFavorite": false
     }
   ],
   "transactions": [
     {
-      "id": "f4ad",
       "member": "d16d",
       "book": "bd4d",
-      "issueDate": "2025-01-12",
-      "returnDate": "2025-02-11",
+      "issueDate": "2024-12-12",
+      "returnDate": "2025-01-11",
       "status": "Issued",
-      "fineAmount": 0,
-      "lastUpdated": "2025-01-12"
+      "fineAmount": 136,
+      "id": "f4ad",
+      "lastUpdated": "2025-01-22",
+      "bookDetails": {
+        "id": "bd4d",
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "genre": "Fiction",
+        "publicationYear": 1925,
+        "availableCopies": 19,
+        "totalCopies": 20,
+        "isbnNumber": "123456789",
+        "rating": 3,
+        "isFavorite": true
+      },
+      "memberDetails": {
+        "name": "Saranya Muruganantham",
+        "email": "saranyamjk@gmail.com",
+        "phoneNumber": "9566593696",
+        "membershipStartDate": "2025-01-07",
+        "membershipType": "Elite",
+        "maxBooksAllowed": 10,
+        "id": "d16d",
+        "isFavorite": true
+      }
     },
     {
       "member": "d16d",
@@ -132,49 +164,127 @@
       "issueDate": "2025-01-12",
       "returnDate": "2025-02-11",
       "status": "Issued",
-      "fineAmount": 0,
+      "fineAmount": 74,
       "id": "e752",
-      "lastUpdated": "2025-01-13"
+      "lastUpdated": "2025-01-13",
+      "bookDetails": {
+        "id": "f22d",
+        "title": "The Kite Runner",
+        "author": "Khaled Hosseini",
+        "genre": "Fiction",
+        "publicationYear": 2003,
+        "availableCopies": 9,
+        "totalCopies": 10,
+        "isbnNumber": "123456789",
+        "rating": 4,
+        "isFavorite": false
+      },
+      "memberDetails": {
+        "name": "Saranya Muruganantham",
+        "email": "saranyamjk@gmail.com",
+        "phoneNumber": "9566593696",
+        "membershipStartDate": "2025-01-07",
+        "membershipType": "Elite",
+        "maxBooksAllowed": 10,
+        "id": "d16d",
+        "isFavorite": true
+      }
     },
     {
-      "id": "9a2b",
       "member": "85cc",
       "book": "521b",
-      "issueDate": "2025-01-13",
-      "returnDate": "2025-02-12",
+      "issueDate": "2023-10-13",
+      "returnDate": "2023-11-12",
       "status": "Issued",
-      "fineAmount": 0,
-      "lastUpdated": "2025-01-13"
+      "fineAmount": 988,
+      "id": "9a2b",
+      "lastUpdated": "2025-01-22",
+      "bookDetails": {
+        "title": "1984",
+        "author": "George Orwell",
+        "genre": "Non-Fiction",
+        "publicationYear": 1949,
+        "totalCopies": 0,
+        "isbnNumber": "123456789",
+        "rating": 4,
+        "id": "521b",
+        "availableCopies": 0,
+        "isFavorite": false
+      },
+      "memberDetails": {
+        "name": "Rithanya Chandran",
+        "email": "rithanya.cs3024@gmail.com",
+        "phoneNumber": "9787032240",
+        "membershipStartDate": "2025-01-07",
+        "membershipType": "Premium",
+        "maxBooksAllowed": 5,
+        "id": "85cc",
+        "isFavorite": false
+      }
     },
     {
-      "id": "0900",
-      "member": "85cc",
-      "book": "70a0",
-      "issueDate": "2025-01-13",
-      "returnDate": "2025-02-12",
-      "status": "Issued",
-      "fineAmount": 0,
-      "lastUpdated": "2025-01-13"
-    },
-    {
-      "id": "a306",
       "member": "d16d",
       "book": "521b",
-      "issueDate": "2025-01-13",
-      "returnDate": "2025-02-12",
+      "issueDate": "2020-01-13",
+      "returnDate": "2020-02-12",
       "status": "Issued",
-      "fineAmount": 0,
-      "lastUpdated": "2025-01-13"
+      "fineAmount": 3726,
+      "id": "a306",
+      "lastUpdated": "2025-01-22",
+      "bookDetails": {
+        "title": "1984",
+        "author": "George Orwell",
+        "genre": "Non-Fiction",
+        "publicationYear": 1949,
+        "totalCopies": 0,
+        "isbnNumber": "123456789",
+        "rating": 4,
+        "id": "521b",
+        "availableCopies": 0,
+        "isFavorite": false
+      },
+      "memberDetails": {
+        "name": "Saranya Muruganantham",
+        "email": "saranyamjk@gmail.com",
+        "phoneNumber": "9566593696",
+        "membershipStartDate": "2025-01-07",
+        "membershipType": "Elite",
+        "maxBooksAllowed": 10,
+        "id": "d16d",
+        "isFavorite": true
+      }
     },
     {
       "member": "dba0",
       "book": "521b",
-      "issueDate": "2025-01-20",
-      "returnDate": "2025-02-19",
+      "issueDate": "2022-01-20",
+      "returnDate": "2022-02-19",
       "status": "Issued",
-      "fineAmount": 0,
+      "fineAmount": 2250,
       "id": "50a3",
-      "lastUpdated": "2025-01-20"
+      "lastUpdated": "2025-01-22",
+      "bookDetails": {
+        "title": "1984",
+        "author": "George Orwell",
+        "genre": "Non-Fiction",
+        "publicationYear": 1949,
+        "totalCopies": 0,
+        "isbnNumber": "123456789",
+        "rating": 4,
+        "id": "521b",
+        "availableCopies": 0,
+        "isFavorite": false
+      },
+      "memberDetails": {
+        "id": "dba0",
+        "name": "Chandran Lakshmanan",
+        "email": "l.chandran3090@gmail.com",
+        "phoneNumber": "9787032240",
+        "membershipStartDate": "2025-01-07",
+        "membershipType": "Basic",
+        "maxBooksAllowed": 2,
+        "isFavorite": true
+      }
     }
   ]
 }
