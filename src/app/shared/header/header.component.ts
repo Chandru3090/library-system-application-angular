@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -13,8 +13,18 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   @Input() menus: any = [];
   authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
+  isUserInfoMenuvisible = false;
 
   logout() {
     this.authService.logout();
+  }
+
+  navigateToDashboard() {
+    this.router.navigate(['/']);
+  }
+
+  toggleUserInfo() {
+    this.isUserInfoMenuvisible = !this.isUserInfoMenuvisible;
   }
 }

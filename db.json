@@ -54,7 +54,7 @@
       "isbnNumber": "123456789",
       "rating": 5,
       "id": "70a0",
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "title": "1984",
@@ -102,7 +102,7 @@
       "isbnNumber": "123456789",
       "rating": 4,
       "id": "f08c",
-      "isFavorite": false
+      "isFavorite": true
     }
   ],
   "staff-members": [
